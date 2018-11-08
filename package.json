@@ -1,5 +1,5 @@
 {
-  "name": "oasis-compile",
+  "name": "oasis-compiler",
   "version": "1.0.0",
   "description": "truffle compiler extension for Oasis",
   "main": "index.js",

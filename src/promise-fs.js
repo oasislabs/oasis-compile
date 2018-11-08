@@ -1,6 +1,6 @@
 const fs = require('fs');
-const path = require('path');
 const findUp = require('find-up');
+const path = require('path');
 const utils = require('./utils');
 
 /**
@@ -38,13 +38,13 @@ async function readDir(dirPath) {
 /**
  * Promise based version of fs.writeFile.
  */
-async function writeFile(path, str) {
+async function writeFile(p, str) {
   return new Promise(function(resolve, reject) {
-    fs.writeFile(path, str, function (err, files) {
+    fs.writeFile(p, str, function (err, files) {
       if (err) {
         reject(err);
       }
-      resolve();
+      resolve(files);
     });
   });
 }
@@ -62,9 +62,12 @@ function mkdirIfNeeded(dir) {
 /**
  * @returns a hex string representing the bytes inside the given file.
  */
-function readBytesAsHex(file) {
+async function readBytesAsHex(file) {
   return new Promise(function(resolve, reject) {
     fs.readFile(file, function read(err, data) {
+      if (err) {
+        reject(err);
+      }
       let buf = Buffer.from(data);
       let bytecode = '0x' + buf.toString('hex');
       resolve(bytecode);
@@ -75,8 +78,9 @@ function readBytesAsHex(file) {
 /**
  * Removes the directory at the given path and all of its contents.
  */
-function rmDir(path)  {
-  return fs.rmdirSync(path);
+async function rmDir(p)  {
+  console.log('removing ' + p);
+  await utils.exec(`rm -rf ${p}`);
 }
 
 /**
@@ -109,7 +113,7 @@ async function truffleRoot() {
 /**
  * Given a filesystem path of the form: /a/b/c, returns /a/b
  */
-function parentDir(p) {
+async function parentDir(p) {
   return path.dirname(p);
 }
 

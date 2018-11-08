@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const rust = require('./rust-compile');
-const solidity = require("./solidity-compile");
+const solidity = require('./solidity-compile');
 const fs = require('./promise-fs');
 const utils = require('./utils');
 

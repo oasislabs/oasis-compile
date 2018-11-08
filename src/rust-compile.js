@@ -1,6 +1,6 @@
 const assert = require('assert');
-const path = require('path');
 const toml = require('toml');
+const path = require('path');
 const truffleCompile = require('truffle-external-compile');
 const fs = require('./promise-fs');
 const utils = require('./utils');
@@ -17,7 +17,7 @@ const WASM_BUILD_CMD = 'wasm-build --target wasm32-unknown-unknown';
 /**
  * Path to target directory, relative to the top level of a given crate.
  */
-const CARGO_TARGET_DIR = 'target';
+const CARGO_TARGET_DIR = '/target';
 
 /**
  * Compiles all crates representing contracts in the truffle project's contracts/.
@@ -91,7 +91,7 @@ async function wasmBuild(cratePath) {
 async function readBytecode(cratePath) {
   const targetDir =  path.join(cratePath, CARGO_TARGET_DIR);
   const files = await fs.readDir(targetDir);
-  const wasmFiles = files.filter((name) => path.extname(name) == '.wasm');
+  const wasmFiles = files.filter((name) => path.extname(name) === '.wasm');
   if (wasmFiles.length > 1) {
     throw 'Found more than one .wasm file. Execute `oasis-compile clean` and try again.'
   } else if (wasmFiles == 0) {
@@ -103,9 +103,10 @@ async function readBytecode(cratePath) {
 }
 
 async function readAbi(cratePath) {
-  const jsonDir = path.join(cratePath, CARGO_TARGET_DIR, 'json');
+  const jsonDir =  path.join(cratePath, CARGO_TARGET_DIR, 'json');
   const files = await fs.readDir(jsonDir);
   let abiName = null;
+  let abi = null;
   if (files.length == 0) {
     abiName = cargoCrateName(cratePath);
     abi = truffleCompile.DEFAULT_ABI;
@@ -123,7 +124,7 @@ async function readAbi(cratePath) {
 }
 
 async function cargoCrateName(crate) {
-  const tomlPath = path.join(crate, 'Cargo.toml');
+  const tomlPath = path.join(crate, '/Cargo.toml');
   const fileStr = await fs.readFile(tomlPath, 'utf8');
   const data = toml.parse(fileStr);
   return data.package.name;

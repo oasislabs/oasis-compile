@@ -6,7 +6,7 @@ const utils = require('./utils');
 async function compile() {
   truffleCompile.all(await compileConfig(), (err, contracts) => {
     if (err) {
-      console.error('Could not compile contracts', err);
+      console.error('Could not compile contracts: ' + err);
       return;
     }
     Object.keys(contracts).forEach((contractName) => {
@@ -23,11 +23,11 @@ async function compile() {
 async function compileConfig() {
   return {
     resolver: new Resolver({
-      working_directory: await fs.trufflePath('oasis-compile'),
+      working_directory: await fs.trufflePath('/oasis-compile'),
       contracts_directory: await fs.trufflePath(utils.CONTRACTS_DIR),
       contracts_build_directory: await fs.trufflePath(utils.TRUFFLE_BUILD_CONTRACTS),
     }),
-    working_directory: await fs.trufflePath('oasis-compile'),
+    working_directory: await fs.trufflePath('/oasis-compile'),
     contracts_directory: await fs.trufflePath(utils.CONTRACTS_DIR),
     quiet: true,
     strict: true,

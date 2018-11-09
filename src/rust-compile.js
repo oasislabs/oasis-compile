@@ -3,6 +3,7 @@ const toml = require('toml');
 const path = require('path');
 const truffleCompile = require('truffle-external-compile');
 const fs = require('./promise-fs');
+const node_fs = require('fs');
 const utils = require('./utils');
 
 /**
@@ -36,11 +37,21 @@ async function compile() {
  */
 async function findCrates() {
   const contractsPath = await fs.trufflePath(utils.CONTRACTS_DIR);
-  const cratesFind = await utils.exec(`find ${contractsPath} -name Cargo.toml -printf '%h,'`);
-  const crates = cratesFind.split(',');
-  // remove the last element that's just an empty string
-  assert.equal(crates.splice(-1,1), '');
-  return crates;
+
+  let readDir = async function(dir, name) {
+    let files = await fs.readDir(dir);
+    let found = [];
+    await Promise.all(files.map(async (f) => {
+      if (node_fs.statSync(path.join(dir, f)).isDirectory()) {
+        found = found.concat(await readDir(path.join(dir, f), name));
+      } else if (f == name) {
+        found.push(path.join(dir, name))
+      }
+    }));
+    return found;
+  }; 
+
+  return readDir(contractsPath, 'Cargo.toml');
 }
 
 async function buildContract(cratePath) {

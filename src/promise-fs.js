@@ -79,8 +79,16 @@ async function readBytesAsHex(file) {
  * Removes the directory at the given path and all of its contents.
  */
 async function rmDir(p)  {
-  console.log('removing ' + p);
-  await utils.exec(`rm -rf ${p}`);
+  return fs.rmdirSync(p);
+}
+
+/**
+ * Removes file if it exists
+ */
+async function rmFile(f)  {
+  if (fs.existsSync(f)) {
+    fs.unlinkSync(f);
+  }
 }
 
 /**
@@ -139,6 +147,7 @@ module.exports = {
   mkdirIfNeeded,
   readBytesAsHex,
   rmDir,
+  rmFile,
   parentDir,
   trufflePath,
   basename,

@@ -17,7 +17,7 @@ const WASM_BUILD_CMD = 'wasm-build --target wasm32-unknown-unknown';
 /**
  * Path to target directory, relative to the top level of a given crate.
  */
-const CARGO_TARGET_DIR = '/target';
+const CARGO_TARGET_DIR = 'target';
 
 /**
  * Compiles all crates representing contracts in the truffle project's contracts/.
@@ -112,7 +112,7 @@ async function readAbi(cratePath) {
     abi = truffleCompile.DEFAULT_ABI;
   } else {
     if (files.length > 1) {
-      throw 'There can be only one ABI per Rust contract crate. Execute `oasis-compile clean` and try again.'
+      throw new Error('There can be only one ABI per Rust contract crate. Execute `oasis-compile clean` and try again.')
     }
     abiName = files[0];
     assert.equal(abiName.endsWith('.json'), true);
@@ -124,7 +124,7 @@ async function readAbi(cratePath) {
 }
 
 async function cargoCrateName(crate) {
-  const tomlPath = path.join(crate, '/Cargo.toml');
+  const tomlPath = path.join(crate, 'Cargo.toml');
   const fileStr = await fs.readFile(tomlPath, 'utf8');
   const data = toml.parse(fileStr);
   return data.package.name;

@@ -38,19 +38,18 @@ async function compile() {
 async function findCrates() {
   const contractsPath = await fs.trufflePath(utils.CONTRACTS_DIR);
 
-  let readDir = async (dir, name) => {
+  let readDir = async function(dir, name) {
     let files = await fs.readDir(dir);
     let found = [];
-    files.forEach((f) => {
+    await Promise.all(files.map(async (f) => {
       if (node_fs.statSync(path.join(dir, f)).isDirectory()) {
         found = found.concat(await readDir(path.join(dir, f), name));
       } else if (f == name) {
         found.push(path.join(dir, name))
       }
-    });
+    }));
     return found;
-  }
-  
+  }; 
 
   return readDir(contractsPath, 'Cargo.toml');
 }

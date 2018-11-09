@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
+const chalk = require('chalk');
+const fs = require('./promise-fs');
+const path = require('path');
 const rust = require('./rust-compile');
 const solidity = require('./solidity-compile');
-const fs = require('./promise-fs');
 const utils = require('./utils');
 
 /**
@@ -52,7 +54,7 @@ async function main() {
  * Removes all compiled output from truffle and oasis-compile.
  */
 async function clean() {
-  console.log('Cleaning Oasis build...');
+  console.log(chalk.green('Cleaning Oasis build...'));
   // cargo target directory
   await cleanCrates();
   // oasis-compile intermediate representation
@@ -67,14 +69,21 @@ async function clean() {
 async function cleanCrates() {
   const cratePaths = await rust.findCrates();
   for (let k = 0; k < cratePaths.length; k += 1) {
+    await fs.rmFile(path.join(cratePaths[k], 'Cargo.lock'));
     await fs.rmDir(rust.cargoTargetDir(cratePaths[k]));
   }
 }
 
 async function compile() {
   fs.mkdirIfNeeded(await fs.trufflePath(utils.OASIS_BUILD_DIR));
-  await rust.compile();
-  await solidity.compile();
+  try {
+    await rust.compile();
+    await solidity.compile();
+  } catch (e) {
+    console.error(chalk.red('Failed to compile'));
+    console.error(e);
+    throw e;
+  }
 }
 
 main();

@@ -7,8 +7,8 @@
     "oasis-compile": "src/index.js"
   },
   "scripts": {
-    "lint": "eslint *.js src/",
-    "lint:fix": "eslint src/*.js --fix"
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix"
   },
   "repository": {
     "type": "git",
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/oasislabs/oasis-compile#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "find-up": "^3.0.0",
     "toml": "^2.3.3",
     "truffle-compile": "^3.0.13",

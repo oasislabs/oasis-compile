@@ -14,7 +14,7 @@ async function compile() {
         contract = confidentialCompile(contract);
       }
       contract = sanitize(contract);
-      fs.writeArtifact(contract.contractName, contract);
+      fs.writeArtifact(contract);
     });
   });
 }

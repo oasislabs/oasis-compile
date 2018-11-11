@@ -2,6 +2,7 @@
 
 const chalk = require('chalk');
 const fs = require('./promise-fs');
+const node_fs = require('fs');
 const path = require('path');
 const rust = require('./rust-compile');
 const solidity = require('./solidity-compile');
@@ -58,7 +59,7 @@ async function clean() {
   // cargo target directory
   await cleanCrates();
   // oasis-compile intermediate representation
-  await fs.rmDir(utils.OASIS_BUILD_DIR);
+  await fs.rmDir(await fs.trufflePath(utils.OASIS_BUILD_DIR));
   // truffle compile artifacts
   await fs.rmDir(await fs.trufflePath(utils.TRUFFLE_BUILD_DIR));
 }
@@ -69,8 +70,14 @@ async function clean() {
 async function cleanCrates() {
   const cratePaths = await rust.findCrates();
   for (let k = 0; k < cratePaths.length; k += 1) {
-    await fs.rmFile(path.join(cratePaths[k], 'Cargo.lock'));
-    await fs.rmDir(rust.cargoTargetDir(cratePaths[k]));
+    const cargoLock = path.join(cratePaths[k], 'Cargo.lock');
+    if (node_fs.existsSync(cargoLock)) {
+      await fs.rmFile(cargoLock);
+    }
+    const targetDir = rust.cargoTargetDir(cratePaths[k]);
+    if (node_fs.existsSync(targetDir)) {
+      await fs.rmDir(targetDir);
+    }
   }
 }
 

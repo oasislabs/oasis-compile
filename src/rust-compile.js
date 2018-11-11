@@ -38,20 +38,23 @@ async function compile() {
 async function findCrates() {
   const contractsPath = await fs.trufflePath(utils.CONTRACTS_DIR);
 
-  let readDir = async function(dir, name) {
+  const cargoToml = 'Cargo.toml';
+  let _findCrates = async function(dir) {
     let files = await fs.readDir(dir);
     let found = [];
     await Promise.all(files.map(async (f) => {
       if (node_fs.statSync(path.join(dir, f)).isDirectory()) {
-        found = found.concat(await readDir(path.join(dir, f), name));
-      } else if (f == name) {
-        found.push(path.join(dir, name))
+        const newCrates = await _findCrates(path.join(dir, f));
+        found = found.concat(newCrates);
+      } else if (f === cargoToml) {
+        found.push(dir);
       }
     }));
     return found;
-  }; 
+  };
 
-  return readDir(contractsPath, 'Cargo.toml');
+  return await _findCrates(contractsPath);
+
 }
 
 async function buildContract(cratePath) {
@@ -68,12 +71,25 @@ async function buildContract(cratePath) {
   if (utils.isConfidential(crateName)) {
     bytecode = utils.CONFIDENTIAL_PREFIX + bytecode.substr(2);
   }
-  const [abiName, abi] = await readAbi(cratePath);
-  await fs.writeArtifact(abiName, {
-    contractName: abiName,
+  const [abiFilename, abi] = await readAbi(cratePath);
+
+  await fs.writeArtifact({
+    contractName: contractName(abiFilename),
     abi,
     bytecode
   });
+}
+
+/**
+ * @returns the contract name from the name of an abi json file. Assumes
+ *          Cargo build creates an abi filename of the form [CONTRACT]Abi.json,
+ *          i.e., the abi filename *ends* in Abi.json
+ */
+function contractName(abiFilename) {
+  if (!abiFilename.endsWith('Abi.json')) {
+    throw 'Abi filename should end in the string \'Abi\'';
+  }
+  return abiFilename.substring(0, abiFilename.length - 'Abi.json'.length);
 }
 
 /**
@@ -128,8 +144,6 @@ async function readAbi(cratePath) {
     abiName = files[0];
     assert.equal(abiName.endsWith('.json'), true);
     abi = JSON.parse(await fs.readFile(path.join(jsonDir, abiName), 'utf8'));
-    // remove ".json" from name
-    abiName = path.basename(abiName, '.json');
   }
   return [abiName, abi];
 }

@@ -1,6 +1,7 @@
 const fs = require('fs');
 const findUp = require('find-up');
 const path = require('path');
+const rimraf = require('rimraf');
 const utils = require('./utils');
 
 /**
@@ -79,7 +80,14 @@ async function readBytesAsHex(file) {
  * Removes the directory at the given path and all of its contents.
  */
 async function rmDir(p)  {
-  return fs.rmdirSync(p);
+  return new Promise(function(resolve, reject) {
+    rimraf(p, function(err) {
+      if (err) {
+        reject(err);
+      }
+      resolve();
+    });
+  });
 }
 
 /**
@@ -133,7 +141,8 @@ function basename(p) {
  * Writes the given compilation artifact to the OASIS_BUILD_DIR to
  * the file [name].json
  */
-async function writeArtifact(name, artifact) {
+async function writeArtifact(artifact) {
+  const name = artifact.contractName;
   const buildDir = await trufflePath(utils.OASIS_BUILD_DIR);
   const p = path.join(buildDir, `${name}.json`);
   await writeFile(p, JSON.stringify(artifact, null, 2));

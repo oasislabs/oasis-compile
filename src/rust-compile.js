@@ -151,7 +151,18 @@ async function cargoCrateName(crate) {
   const tomlPath = path.join(crate, 'Cargo.toml');
   const fileStr = await fs.readFile(tomlPath, 'utf8');
   const data = toml.parse(fileStr);
+  assertCrateNameIsValid(data.package.name);
   return data.package.name;
+}
+
+/**
+ * @throws exception if the given crate name is invalid.
+ */
+function assertCrateNameIsValid(crateNameStr) {
+  const validCrateNameRegex = /^[a-zA-Z]+[-_a-zA-Z0-9]*$/;
+  if (!validCrateNameRegex.test(crateNameStr)) {
+    throw `Invalid crate name: ${crateNameStr}. Crates must contain only alphanumeric characters separated by a - or _.`
+  }
 }
 
 /**
@@ -165,5 +176,8 @@ function cargoTargetDir(cratePath) {
 module.exports = {
   cargoTargetDir,
   compile,
-  findCrates
+  findCrates,
+  private: {
+    assertCrateNameIsValid
+  }
 };

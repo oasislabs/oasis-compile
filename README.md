@@ -1,6 +1,6 @@
 # Oasis Compile 
 
-[![CircleCI](https://circleci.com/gh/oasislabs/oasis-compiler.svg?style=svg)](https://circleci.com/gh/oasislabs/oasis-compiler)
+[![CircleCI](https://circleci.com/gh/oasislabs/oasis-compiler.svg?style=svg&circle-token=7a42a176ac6ffdeebd1077bc6fdec7da5c614b87)](https://circleci.com/gh/oasislabs/oasis-compiler)
 
 Oasis-compile is a truffle compiler extension used to compile both Solidity
 and Rust contracts with or without confidentiality.

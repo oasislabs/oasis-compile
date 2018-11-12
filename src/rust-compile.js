@@ -81,15 +81,14 @@ async function buildContract(cratePath) {
 }
 
 /**
- * @returns the contract name from the name of an abi json file. Assumes
- *          Cargo build creates an abi filename of the form [CONTRACT]Abi.json,
- *          i.e., the abi filename *ends* in Abi.json
+ * @returns the contract name from the name of an abi json file.
+ *          Strips off .json at the end of the filename.
  */
 function contractName(abiFilename) {
-  if (!abiFilename.endsWith('Abi.json')) {
-    throw 'Abi filename should end in the string \'Abi\'';
+  if (!abiFilename.endsWith('.json')) {
+    throw 'Filename must end with .json';
   }
-  return abiFilename.substring(0, abiFilename.length - 'Abi.json'.length);
+  return abiFilename.substring(0, abiFilename.length - '.json'.length);
 }
 
 /**

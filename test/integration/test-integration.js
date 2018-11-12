@@ -10,5 +10,5 @@ describe('Integration tests', () => {
     } catch (err) {
       assert.equal(true, false);
     }
-  }).timeout(5000);
+  }).timeout(500000); // rust compiler is slow :/
 });

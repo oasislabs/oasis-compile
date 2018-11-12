@@ -1,8 +1,8 @@
 {
   "sourcePath": "/oasislabs/oasis-compile/test/integration/oasis-box/tmp/oasis-box/contracts/nested/NestedCounter.sol",
-  "source": "pragma solidity ^0.4.24;\n\ncontract NestedCounter {\n\n  uint256 _counter;\n\n  function getCounter() public view returns (uint256) {\n\treturn _counter;\n  }\n\n  function incrementCounter() public {\n\t_counter += 1;\n  }\n}\n",
-  "sourceMap": "26:186:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:186:3;;;;;;;",
-  "deployedSourceMap": "26:186:3:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;154:56;;8:9:-1;5:2;;;30:1;27;20:12;5:2;154:56:3;;;;;;75:75;;8:9:-1;5:2;;;30:1;27;20:12;5:2;75:75:3;;;;;;;;;;;;;;;;;;;;;;;154:56;204:1;192:8;;:13;;;;;;;;;;;154:56::o;75:75::-;118:7;137:8;;130:15;;75:75;:::o",
+  "source": "pragma solidity ^0.4.24;\n\ncontract NestedCounter {\n\n  uint256 _counter;\n\n  function count() public view returns (uint256) {\n\treturn _counter;\n  }\n\n  function increment() public {\n\t_counter += 1;\n  }\n}\n",
+  "sourceMap": "26:174:3:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;26:174:3;;;;;;;",
+  "deployedSourceMap": "26:174:3:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;75:70;;8:9:-1;5:2;;;30:1;27;20:12;5:2;75:70:3;;;;;;;;;;;;;;;;;;;;;;;149:49;;8:9:-1;5:2;;;30:1;27;20:12;5:2;149:49:3;;;;;;75:70;113:7;132:8;;125:15;;75:70;:::o;149:49::-;192:1;180:8;;:13;;;;;;;;;;;149:49::o",
   "legacyAST": {
     "attributes": {
       "absolutePath": "/oasislabs/oasis-compile/test/integration/oasis-box/tmp/oasis-box/contracts/nested/NestedCounter.sol",
@@ -79,7 +79,7 @@
               "modifiers": [
                 null
               ],
-              "name": "getCounter",
+              "name": "count",
               "payable": false,
               "scope": 119,
               "stateMutability": "view",
@@ -96,7 +96,7 @@
                 "children": [],
                 "id": 103,
                 "name": "ParameterList",
-                "src": "94:2:3"
+                "src": "89:2:3"
               },
               {
                 "children": [
@@ -119,17 +119,17 @@
                         },
                         "id": 104,
                         "name": "ElementaryTypeName",
-                        "src": "118:7:3"
+                        "src": "113:7:3"
                       }
                     ],
                     "id": 105,
                     "name": "VariableDeclaration",
-                    "src": "118:7:3"
+                    "src": "113:7:3"
                   }
                 ],
                 "id": 106,
                 "name": "ParameterList",
-                "src": "117:9:3"
+                "src": "112:9:3"
               },
               {
                 "children": [
@@ -150,22 +150,22 @@
                         },
                         "id": 107,
                         "name": "Identifier",
-                        "src": "137:8:3"
+                        "src": "132:8:3"
                       }
                     ],
                     "id": 108,
                     "name": "Return",
-                    "src": "130:15:3"
+                    "src": "125:15:3"
                   }
                 ],
                 "id": 109,
                 "name": "Block",
-                "src": "127:23:3"
+                "src": "122:23:3"
               }
             ],
             "id": 110,
             "name": "FunctionDefinition",
-            "src": "75:75:3"
+            "src": "75:70:3"
           },
           {
             "attributes": {
@@ -176,7 +176,7 @@
               "modifiers": [
                 null
               ],
-              "name": "incrementCounter",
+              "name": "increment",
               "payable": false,
               "scope": 119,
               "stateMutability": "nonpayable",
@@ -193,7 +193,7 @@
                 "children": [],
                 "id": 111,
                 "name": "ParameterList",
-                "src": "179:2:3"
+                "src": "167:2:3"
               },
               {
                 "attributes": {
@@ -204,7 +204,7 @@
                 "children": [],
                 "id": 112,
                 "name": "ParameterList",
-                "src": "189:0:3"
+                "src": "177:0:3"
               },
               {
                 "children": [
@@ -233,7 +233,7 @@
                             },
                             "id": 113,
                             "name": "Identifier",
-                            "src": "192:8:3"
+                            "src": "180:8:3"
                           },
                           {
                             "attributes": {
@@ -250,37 +250,37 @@
                             },
                             "id": 114,
                             "name": "Literal",
-                            "src": "204:1:3"
+                            "src": "192:1:3"
                           }
                         ],
                         "id": 115,
                         "name": "Assignment",
-                        "src": "192:13:3"
+                        "src": "180:13:3"
                       }
                     ],
                     "id": 116,
                     "name": "ExpressionStatement",
-                    "src": "192:13:3"
+                    "src": "180:13:3"
                   }
                 ],
                 "id": 117,
                 "name": "Block",
-                "src": "189:21:3"
+                "src": "177:21:3"
               }
             ],
             "id": 118,
             "name": "FunctionDefinition",
-            "src": "154:56:3"
+            "src": "149:49:3"
           }
         ],
         "id": 119,
         "name": "ContractDefinition",
-        "src": "26:186:3"
+        "src": "26:174:3"
       }
     ],
     "id": 120,
     "name": "SourceUnit",
-    "src": "0:213:3"
+    "src": "0:201:3"
   },
   "ast": {
     "absolutePath": "/oasislabs/oasis-compile/test/integration/oasis-box/tmp/oasis-box/contracts/nested/NestedCounter.sol",
@@ -346,7 +346,7 @@
             "body": {
               "id": 109,
               "nodeType": "Block",
-              "src": "127:23:3",
+              "src": "122:23:3",
               "statements": [
                 {
                   "expression": {
@@ -356,7 +356,7 @@
                     "nodeType": "Identifier",
                     "overloadedDeclarations": [],
                     "referencedDeclaration": 102,
-                    "src": "137:8:3",
+                    "src": "132:8:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -365,7 +365,7 @@
                   "functionReturnParameters": 106,
                   "id": 108,
                   "nodeType": "Return",
-                  "src": "130:15:3"
+                  "src": "125:15:3"
                 }
               ]
             },
@@ -375,13 +375,13 @@
             "isConstructor": false,
             "isDeclaredConst": true,
             "modifiers": [],
-            "name": "getCounter",
+            "name": "count",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 103,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "94:2:3"
+              "src": "89:2:3"
             },
             "payable": false,
             "returnParameters": {
@@ -394,7 +394,7 @@
                   "name": "",
                   "nodeType": "VariableDeclaration",
                   "scope": 110,
-                  "src": "118:7:3",
+                  "src": "113:7:3",
                   "stateVariable": false,
                   "storageLocation": "default",
                   "typeDescriptions": {
@@ -405,7 +405,7 @@
                     "id": 104,
                     "name": "uint256",
                     "nodeType": "ElementaryTypeName",
-                    "src": "118:7:3",
+                    "src": "113:7:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -415,10 +415,10 @@
                   "visibility": "internal"
                 }
               ],
-              "src": "117:9:3"
+              "src": "112:9:3"
             },
             "scope": 119,
-            "src": "75:75:3",
+            "src": "75:70:3",
             "stateMutability": "view",
             "superFunction": null,
             "visibility": "public"
@@ -427,7 +427,7 @@
             "body": {
               "id": 117,
               "nodeType": "Block",
-              "src": "189:21:3",
+              "src": "177:21:3",
               "statements": [
                 {
                   "expression": {
@@ -444,7 +444,7 @@
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
                       "referencedDeclaration": 102,
-                      "src": "192:8:3",
+                      "src": "180:8:3",
                       "typeDescriptions": {
                         "typeIdentifier": "t_uint256",
                         "typeString": "uint256"
@@ -462,7 +462,7 @@
                       "kind": "number",
                       "lValueRequested": false,
                       "nodeType": "Literal",
-                      "src": "204:1:3",
+                      "src": "192:1:3",
                       "subdenomination": null,
                       "typeDescriptions": {
                         "typeIdentifier": "t_rational_1_by_1",
@@ -470,7 +470,7 @@
                       },
                       "value": "1"
                     },
-                    "src": "192:13:3",
+                    "src": "180:13:3",
                     "typeDescriptions": {
                       "typeIdentifier": "t_uint256",
                       "typeString": "uint256"
@@ -478,7 +478,7 @@
                   },
                   "id": 116,
                   "nodeType": "ExpressionStatement",
-                  "src": "192:13:3"
+                  "src": "180:13:3"
                 }
               ]
             },
@@ -488,39 +488,39 @@
             "isConstructor": false,
             "isDeclaredConst": false,
             "modifiers": [],
-            "name": "incrementCounter",
+            "name": "increment",
             "nodeType": "FunctionDefinition",
             "parameters": {
               "id": 111,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "179:2:3"
+              "src": "167:2:3"
             },
             "payable": false,
             "returnParameters": {
               "id": 112,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "189:0:3"
+              "src": "177:0:3"
             },
             "scope": 119,
-            "src": "154:56:3",
+            "src": "149:49:3",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
           }
         ],
         "scope": 120,
-        "src": "26:186:3"
+        "src": "26:174:3"
       }
     ],
-    "src": "0:213:3"
+    "src": "0:201:3"
   },
   "abi": [
     {
       "constant": true,
       "inputs": [],
-      "name": "getCounter",
+      "name": "count",
       "outputs": [
         {
           "name": "",
@@ -534,15 +534,15 @@
     {
       "constant": false,
       "inputs": [],
-      "name": "incrementCounter",
+      "name": "increment",
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
       "type": "function"
     }
   ],
-  "bytecode": "0x608060405234801561001057600080fd5b5060d18061001f6000396000f3006080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680635b34b96614604e5780638ada066e146062575b600080fd5b348015605957600080fd5b506060608a565b005b348015606d57600080fd5b506074609c565b6040518082815260200191505060405180910390f35b60016000808282540192505081905550565b600080549050905600a165627a7a723058205b4e2d2badd17cb4b34ab3016d07991bf9fed4f82f40265e1ff0646f0025c6830029",
-  "deployedBytecode": "0x6080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff1680635b34b96614604e5780638ada066e146062575b600080fd5b348015605957600080fd5b506060608a565b005b348015606d57600080fd5b506074609c565b6040518082815260200191505060405180910390f35b60016000808282540192505081905550565b600080549050905600a165627a7a723058205b4e2d2badd17cb4b34ab3016d07991bf9fed4f82f40265e1ff0646f0025c6830029",
+  "bytecode": "0x608060405234801561001057600080fd5b5060d18061001f6000396000f3006080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306661abd14604e578063d09de08a146076575b600080fd5b348015605957600080fd5b506060608a565b6040518082815260200191505060405180910390f35b348015608157600080fd5b5060886093565b005b60008054905090565b600160008082825401925050819055505600a165627a7a72305820c92309162fd1df39b2bd647ddb8814d641fc327be39962719dc56ed94b1c0c010029",
+  "deployedBytecode": "0x6080604052600436106049576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806306661abd14604e578063d09de08a146076575b600080fd5b348015605957600080fd5b506060608a565b6040518082815260200191505060405180910390f35b348015608157600080fd5b5060886093565b005b60008054905090565b600160008082825401925050819055505600a165627a7a72305820c92309162fd1df39b2bd647ddb8814d641fc327be39962719dc56ed94b1c0c010029",
   "compiler": {
     "name": "solc",
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"

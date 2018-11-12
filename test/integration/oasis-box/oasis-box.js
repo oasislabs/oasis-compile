@@ -45,8 +45,6 @@ async function main() {
     process.chdir(TMP_DIR);
     await utils.exec(CLONE_OASIS_BOX);
     process.chdir(OASIS_BOX_DIR);
-    // temporarily use this branch until it gets merged (waiting to publish on crates.io)
-    await utils.exec('git checkout armani/oasis-copiler-test');
     await utils.exec(OASIS_COMPILE_CMD);
     await compareCompiledOutput();
     // cleanup

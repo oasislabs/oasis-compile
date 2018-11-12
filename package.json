@@ -8,8 +8,8 @@
   },
   "scripts": {
     "test": "mocha test/**/*",
-    "lint": "eslint src/",
-    "lint:fix": "eslint src/ --fix"
+    "lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix"
   },
   "repository": {
     "type": "git",

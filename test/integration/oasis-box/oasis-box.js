@@ -40,22 +40,22 @@ const RESULTANT_OASIS_BUILD_DIR = path.join(__dirname, 'tmp/oasis-box/.oasis-bui
 
 async function main() {
   try {
-	await fs.rmDir(TMP_DIR);
-	await fs.mkdirIfNeeded(TMP_DIR);
-	process.chdir(TMP_DIR);
-	await utils.exec(CLONE_OASIS_BOX);
-	process.chdir(OASIS_BOX_DIR);
-	// temporarily use this branch until it gets merged (waiting to publish on crates.io)
-	await utils.exec('git checkout armani/oasis-copiler-test');
-	const output = await utils.exec(OASIS_COMPILE_CMD);
-	await compareCompiledOutput();
-	// cleanup
-	await fs.rmDir(TMP_DIR);
+    await fs.rmDir(TMP_DIR);
+    await fs.mkdirIfNeeded(TMP_DIR);
+    process.chdir(TMP_DIR);
+    await utils.exec(CLONE_OASIS_BOX);
+    process.chdir(OASIS_BOX_DIR);
+    // temporarily use this branch until it gets merged (waiting to publish on crates.io)
+    await utils.exec('git checkout armani/oasis-copiler-test');
+    await utils.exec(OASIS_COMPILE_CMD);
+    await compareCompiledOutput();
+    // cleanup
+    await fs.rmDir(TMP_DIR);
   } catch (err) {
-	console.error("error: ", err);
-	// cleanup
-	await fs.rmDir(TMP_DIR);
-	process.exit(1);
+    console.error('error: ', err);
+    // cleanup
+    await fs.rmDir(TMP_DIR);
+    process.exit(1);
   }
 }
 
@@ -69,9 +69,9 @@ async function compareCompiledOutput() {
 
   assert.equal(expectedFiles.length, resultFiles.length);
   for (let k = 0; k < expectedFiles.length; k += 1) {
-	const expectedFilePath = path.join(EXPECTED_OASIS_BUILD_DIR, expectedFiles[k]);
-	const resultFilePath = path.join(RESULTANT_OASIS_BUILD_DIR, expectedFiles[k]);
-	await assertArtifactsEqual(expectedFilePath, resultFilePath);
+    const expectedFilePath = path.join(EXPECTED_OASIS_BUILD_DIR, expectedFiles[k]);
+    const resultFilePath = path.join(RESULTANT_OASIS_BUILD_DIR, expectedFiles[k]);
+    await assertArtifactsEqual(expectedFilePath, resultFilePath);
   }
 }
 
@@ -88,13 +88,13 @@ async function assertArtifactsEqual(filePath1, filePath2) {
   // so check everything except for those.
   // see https://solidity.readthedocs.io/en/develop/metadata.html#encoding-of-the-metadata-hash-in-the-bytecode
   assert.equal(
-	file1.bytecode.substring(0, file1.bytecode.length - 64 - 4),
-	file2.bytecode.substring(0, file2.bytecode.length - 64 - 4)
+    file1.bytecode.substring(0, file1.bytecode.length - 64 - 4),
+    file2.bytecode.substring(0, file2.bytecode.length - 64 - 4)
   );
   assert.equal(file1.bytecode.length, file2.bytecode.length);
   assert.equal(
-	file1.bytecode.substr(file1.bytecode.length-4),
-	file2.bytecode.substr(file2.bytecode.length-4)
+    file1.bytecode.substr(file1.bytecode.length-4),
+    file2.bytecode.substr(file2.bytecode.length-4)
   );
 }
 

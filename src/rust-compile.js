@@ -58,7 +58,9 @@ async function findCrates() {
 }
 
 async function buildContract(cratePath) {
-  console.log(`Compiling ${cratePath}...`);
+  const crateName = fs.basename(cratePath);
+
+  utils.logCompileStart(crateName);
 
   process.chdir(cratePath);
 
@@ -67,7 +69,6 @@ async function buildContract(cratePath) {
 
   let bytecode = await readBytecode(cratePath);
 
-  const crateName = fs.basename(cratePath);
   if (utils.isConfidential(crateName)) {
     bytecode = utils.CONFIDENTIAL_PREFIX + bytecode.substr(2);
   }

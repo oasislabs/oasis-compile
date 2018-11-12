@@ -10,6 +10,7 @@ async function compile() {
     }
     Object.keys(contracts).forEach((contractName) => {
       let contract = contracts[contractName];
+      utils.logCompileStart(fs.basename(contract.sourcePath));
       if (utils.isConfidential(contract.sourcePath)) {
         contract = confidentialCompile(contract);
       }
@@ -42,8 +43,6 @@ async function compileConfig() {
  *          compile.
  */
 function confidentialCompile(contract) {
-
-  console.log(`Compiling ${contract.contract_name} as confidential...`);
 
   contract.bytecode = utils.CONFIDENTIAL_PREFIX + contract.bytecode.substr(2);
   contract.deployedBytecode = utils.CONFIDENTIAL_PREFIX + contract.deployedBytecode.substr(2);

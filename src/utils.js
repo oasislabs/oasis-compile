@@ -24,6 +24,10 @@ const TRUFFLE_BUILD_DIR = 'build';
  * Truffle contracts build path relative to the truffle root directory.
  */
 const TRUFFLE_BUILD_CONTRACTS = path.join(TRUFFLE_BUILD_DIR, 'contracts');
+/**
+ * Unicode icon to show when compiling confidential contract.
+ */
+const LOCK_EMOJI = '🔒';
 
 /**
  * Executes the given shell command.
@@ -40,6 +44,22 @@ async function exec(cmdStr) {
   return promise;
 }
 
+
+/**
+ * Logs message to display to the user right before beginning to compile
+ * the given crate.
+ */
+function logCompileStart(filename) {
+  let msg = `Compiling ${filename}`
+  if (isConfidential(filename)) {
+    msg = `${LOCK_EMOJI} ${msg} as confidential`;
+  } else {
+    msg = '   ' + msg;
+  }
+  msg += '...';
+  console.log(msg);
+}
+
 /**
  * @returns true if the given file path represents a confidential contract.
  */
@@ -50,9 +70,11 @@ function isConfidential(p) {
 
 module.exports = {
   exec,
+  logCompileStart,
   isConfidential,
   CONFIDENTIAL_PREFIX,
   CONTRACTS_DIR,
+  LOCK_EMOJI,
   OASIS_BUILD_DIR,
   TRUFFLE_BUILD_DIR,
   TRUFFLE_BUILD_CONTRACTS

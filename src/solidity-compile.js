@@ -30,7 +30,7 @@ async function compileConfig() {
     working_directory: await fs.trufflePath('oasis-compile'),
     contracts_directory: await fs.trufflePath(utils.CONTRACTS_DIR),
     quiet: true,
-    strict: true,
+    strict: false,
     paths: await fs.trufflePath(utils.CONTRACTS_DIR),
     solc: true,
   };

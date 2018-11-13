@@ -82,6 +82,7 @@ async function cleanCrates() {
 }
 
 async function compile() {
+  console.log('Building contracts for Oasis');
   fs.mkdirIfNeeded(await fs.trufflePath(utils.OASIS_BUILD_DIR));
   try {
     await rust.compile();

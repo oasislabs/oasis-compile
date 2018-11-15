@@ -3,7 +3,6 @@ const toml = require('toml');
 const path = require('path');
 const truffleCompile = require('truffle-external-compile');
 const fs = require('./promise-fs');
-const node_fs = require('fs');
 const utils = require('./utils');
 
 /**
@@ -37,23 +36,8 @@ async function compile() {
  */
 async function findCrates() {
   const contractsPath = await fs.trufflePath(utils.CONTRACTS_DIR);
-
-  const cargoToml = 'Cargo.toml';
-  let _findCrates = async function(dir) {
-    let files = await fs.readDir(dir);
-    let found = [];
-    await Promise.all(files.map(async (f) => {
-      if (node_fs.statSync(path.join(dir, f)).isDirectory()) {
-        const newCrates = await _findCrates(path.join(dir, f));
-        found = found.concat(newCrates);
-      } else if (f === cargoToml) {
-        found.push(dir);
-      }
-    }));
-    return found;
-  };
-
-  return await _findCrates(contractsPath);
+  const fileToFind = 'Cargo.toml';
+  return await fs.findDirectories(contractsPath, fileToFind);
 
 }
 

@@ -10,6 +10,7 @@ const assert = require('assert');
 const path = require('path');
 const utils = require('../../../src/utils');
 const fs = require('../../../src/promise-fs');
+const node_fs = require('fs');
 
 /**
  * Command to download the truffle project that we'll compile.
@@ -37,16 +38,21 @@ const EXPECTED_OASIS_BUILD_DIR = path.join(__dirname, 'expected-oasis-build');
  * inside the oasis-box truffle project.
  */
 const RESULTANT_OASIS_BUILD_DIR = path.join(__dirname, 'tmp/oasis-box/.oasis-build');
+/**
+ * Shell cmd for removing all the compiled artifacts.
+ */
+const OASIS_CLEAN_CMD = `${OASIS_COMPILE_CMD} clean`;
 
 async function main() {
   try {
+    // clean any old test files (not necessary but sometimes its nice to
+    // keep the tmp dir around for debugging and so this is here to clean
+    // up in those situations for convenience).
     await fs.rmDir(TMP_DIR);
-    await fs.mkdirIfNeeded(TMP_DIR);
-    process.chdir(TMP_DIR);
-    await utils.exec(CLONE_OASIS_BOX);
-    process.chdir(OASIS_BOX_DIR);
-    await utils.exec(OASIS_COMPILE_CMD);
-    await compareCompiledOutput();
+
+    await testCompile();
+    await testClean();
+
     // cleanup
     await fs.rmDir(TMP_DIR);
   } catch (err) {
@@ -55,6 +61,18 @@ async function main() {
     await fs.rmDir(TMP_DIR);
     process.exit(1);
   }
+}
+
+/**
+ * Tests the OASIS_COMPILE_CMD.
+ */
+async function testCompile() {
+  await fs.mkdirIfNeeded(TMP_DIR);
+  process.chdir(TMP_DIR);
+  await utils.exec(CLONE_OASIS_BOX);
+  process.chdir(OASIS_BOX_DIR);
+  await utils.exec(OASIS_COMPILE_CMD);
+  await compareCompiledOutput();
 }
 
 /**
@@ -96,5 +114,42 @@ async function assertArtifactsEqual(filePath1, filePath2) {
   );
 }
 
+/**
+ * Tests the OASIS_CLEAN_CMD.
+ */
+async function testClean() {
+  process.chdir(OASIS_BOX_DIR);
+  // make the build directory that truffle would create for truffle compile
+  // since we want to test cleaning it
+  await fs.mkdirIfNeeded(path.join(OASIS_BOX_DIR, 'build'));
+  await utils.exec(OASIS_CLEAN_CMD);
+  await assertContractsCleaned();
+  await assertOasisBuildCleaned();
+  await assertTruffleBuildCleaned();
+}
+
+async function assertContractsCleaned() {
+  assert.equal(
+    node_fs.existsSync(path.join(OASIS_BOX_DIR, 'contracts', 'wasm-counter', 'target')),
+    false
+  );
+  assert.equal(
+    node_fs.existsSync(path.join(OASIS_BOX_DIR, 'contracts', 'confidential-wasm-counter', 'target')),
+    false
+  );
+  assert.equal(
+    node_fs.existsSync(path.join(OASIS_BOX_DIR, 'contracts', 'nested', 'nested-wasm-counter', 'target')),
+    false
+  );
+}
+
+async function assertOasisBuildCleaned() {
+  assert.equal(node_fs.existsSync(RESULTANT_OASIS_BUILD_DIR), false);
+}
+
+async function assertTruffleBuildCleaned() {
+  const truffleBuildDir = path.join(OASIS_BOX_DIR, 'build');
+  assert.equal(node_fs.existsSync(truffleBuildDir), false);
+}
 
 module.exports = main;

@@ -148,6 +148,25 @@ async function writeArtifact(artifact) {
   await writeFile(p, JSON.stringify(artifact, null, 2));
 }
 
+/**
+ * @returns the list of directories containing a file named `filename`.
+ */
+async function findDirectories(dir, filename) {
+  let _findDirectories = async function(dir) {
+    let files = await readDir(dir);
+    let found = [];
+    await Promise.all(files.map(async (f) => {
+      if (fs.statSync(path.join(dir, f)).isDirectory()) {
+        const newCrates = await _findDirectories(path.join(dir, f));
+        found = found.concat(newCrates);
+      } else if (f === filename) {
+        found.push(dir);
+      }
+    }));
+    return found;
+  }
+  return _findDirectories(dir);
+}
 
 module.exports = {
   readFile,
@@ -160,5 +179,6 @@ module.exports = {
   parentDir,
   trufflePath,
   basename,
-  writeArtifact
+  writeArtifact,
+  findDirectories
 };

@@ -85,8 +85,10 @@ async function compile() {
   console.log('Building contracts for Oasis');
   fs.mkdirIfNeeded(await fs.trufflePath(utils.OASIS_BUILD_DIR));
   try {
-    await rust.compile();
-    await solidity.compile();
+    await Promise.all([
+      rust.compile(),
+      solidity.compile()
+    ]);
   } catch (e) {
     console.error(chalk.red('Failed to compile'));
     console.error(e);

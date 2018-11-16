@@ -25,9 +25,11 @@ const CARGO_TARGET_DIR = 'target';
 async function compile() {
   process.chdir(await fs.trufflePath(utils.CONTRACTS_DIR));
   const crates = await findCrates();
+  const builds = [];
   for (let k = 0; k < crates.length; k += 1) {
-    await buildContract(crates[k]);
+    builds.push(buildContract(crates[k]));
   }
+  await Promise.all(builds);
 }
 
 /**

@@ -96,4 +96,7 @@ async function compile() {
   }
 }
 
-main();
+main().catch(err => {
+  console.error(chalk.red('Shutting down due to failure: ' + err));
+  process.exit(1);
+});

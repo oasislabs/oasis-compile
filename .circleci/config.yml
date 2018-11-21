@@ -28,9 +28,8 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm test
-
       - run: npm run-script lint
+      - run: npm test
 
 workflows:
   version: 2

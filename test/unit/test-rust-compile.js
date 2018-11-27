@@ -47,4 +47,75 @@ describe('Rust', () => {
       return description + ' throw exception for a crate name of the form ' + c[0];
     }
   });
+
+  describe('cargoCrateToml', () => {
+    const cases = [
+      {
+        description: 'should return an object with {} options when there is no metadata',
+        toml: `[package]
+               name = "wasm-counter"
+               version = "0.1.0"
+               authors = ["Oasis Labs Inc. <info@oasislabs.com>"]`,
+        expected: { name: 'wasm-counter', options: {} }
+      },
+      {
+        description: 'should return an object with {} options when there is empty metadata',
+        toml: `[package]
+               name = "wasm-counter"
+               version = "0.1.0"
+               authors = ["Oasis Labs Inc. <info@oasislabs.com>"]
+
+               [package.metadata.oasis]`,
+        expected: { name: 'wasm-counter', options: {} }
+      },
+      {
+        description: 'should return an object with max-mem options when there is metadata',
+        toml: `[package]
+               name = "wasm-counter"
+               version = "0.1.0"
+               authors = ["Oasis Labs Inc. <info@oasislabs.com>"]
+
+               [package.metadata.oasis]
+               max-mem = 30000`,
+        expected: { name: 'wasm-counter', options: { 'max-mem': 30000 } }
+      }
+    ];
+    cases.forEach((testCase) => {
+      it(testCase.description, () => {
+        let result = rust.private.cargoCrateTomlStr(testCase.toml);
+        assert.deepEqual(result, testCase.expected);
+      });
+    });
+  });
+
+  describe('wasmBuildOptionsCmd', () => {
+    const cases = [
+      {
+        description: 'should give empty options when undefined options are given',
+        options: undefined,
+        expected: ''
+      },
+      {
+        description: 'should give empty options when options are given with undefined max-mem',
+        options: {},
+        expected: ''
+      },
+      {
+        description: 'should give empty options when options are given with invalid options',
+        options: {'not-valid': 30000},
+        expected: ''
+      },
+      {
+        description: 'should give empty options when options are given with max-mem == 30000',
+        options: {'max-mem': 30000},
+        expected: '--max-mem 30000'
+      },
+    ];
+    cases.forEach((testCase) => {
+      it(testCase.description, () => {
+        let result = rust.private.wasmBuildOptionsCmd(testCase.options);
+        assert.equal(result, testCase.expected);
+      });
+    });
+  });
 });

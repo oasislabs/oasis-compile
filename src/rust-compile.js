@@ -95,9 +95,12 @@ async function cargoBuild() {
  *       the actual name of the crate--ignoring the confidential prefix.
  */
 async function wasmBuild(cratePath) {
-  const crateName = await cargoCrateName(cratePath);
+  const cargoToml = await cargoCrateToml(cratePath);
+  const crateName = cargoToml.name;
+  const options = wasmBuildOptionsCmd(cargoToml.options);
+
   const targetPath = path.join(cratePath, CARGO_TARGET_DIR);
-  const cmd = `${WASM_BUILD_CMD} ${targetPath} ${crateName}`;
+  const cmd = `${WASM_BUILD_CMD} ${targetPath} ${crateName} ${options}`;
   await utils.exec(cmd);
 }
 
@@ -121,7 +124,7 @@ async function readAbi(cratePath) {
   let abiName = null;
   let abi = null;
   if (files.length == 0) {
-    abiName = cargoCrateName(cratePath);
+    abiName = cargoCrateToml(cratePath).name;
     abi = truffleCompile.DEFAULT_ABI;
   } else {
     if (files.length > 1) {
@@ -134,12 +137,43 @@ async function readAbi(cratePath) {
   return [abiName, abi];
 }
 
-async function cargoCrateName(crate) {
+/**
+ * @returns an Object with members `name` representing the crate name
+ *          and `options`, representing wasm-build options, where the
+ *          `options` map option-name to value.
+ */
+async function cargoCrateToml(crate) {
   const tomlPath = path.join(crate, 'Cargo.toml');
   const fileStr = await fs.readFile(tomlPath, 'utf8');
+  return cargoCrateTomlStr(fileStr);
+}
+
+/**
+ * @param fileStr is a String representing the contents of a Cargo.toml.
+ */
+function cargoCrateTomlStr(fileStr) {
   const data = toml.parse(fileStr);
   assertCrateNameIsValid(data.package.name);
-  return data.package.name;
+  let options = {};
+  if (data.package.metadata !== undefined) {
+    options = data.package.metadata.oasis;
+  }
+  return {name: data.package.name, options};
+}
+
+/**
+ * @returns a string representing the shell cmd options for wasm-build,
+ *          e.g., --max-mem 3000
+ */
+function wasmBuildOptionsCmd(options) {
+  if (options === undefined) {
+    return '';
+  }
+  let cmd = '';
+  if (options['max-mem'] !== undefined) {
+    cmd += '--max-mem ' + options['max-mem'];
+  }
+  return cmd;
 }
 
 /**
@@ -165,6 +199,8 @@ module.exports = {
   compile,
   findCrates,
   private: {
-    assertCrateNameIsValid
+    assertCrateNameIsValid,
+    cargoCrateTomlStr,
+    wasmBuildOptionsCmd
   }
 };

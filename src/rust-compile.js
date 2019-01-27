@@ -3,13 +3,14 @@ const toml = require('toml');
 const path = require('path');
 const truffleCompile = require('truffle-external-compile');
 const fs = require('./promise-fs');
+const node_fs = require('fs');
 const utils = require('./utils');
 
 /**
  * Command to compile rust source to wasm. Assumes the current directory is the top
  * level directory of the crate to build.
  */
-const CARGO_BUILD_CMD = 'cargo build --target-dir ./target --release --target wasm32-unknown-unknown';
+const CARGO_BUILD_CMD = 'cargo build --release --target wasm32-unknown-unknown';
 /**
  * Command to prepare wasm for execution in the Oasis runtime.
  */
@@ -17,7 +18,11 @@ const WASM_BUILD_CMD = 'wasm-build --target wasm32-unknown-unknown';
 /**
  * Path to target directory, relative to the top level of a given crate.
  */
-const CARGO_TARGET_DIR = 'target';
+const CARGO_TARGET_DIR = './target';
+/**
+ * Directory (within a crate) to hold the compiled wasm output.
+ */
+const WASM_OUT_DIR = ".oasis-wasm";
 
 /**
  * Compiles all crates representing contracts in the truffle project's contracts/.
@@ -99,27 +104,60 @@ async function wasmBuild(cratePath) {
   const crateName = cargoToml.name;
   const options = wasmBuildOptionsCmd(cargoToml.options);
 
-  const targetPath = path.join(cratePath, CARGO_TARGET_DIR);
-  const cmd = `${WASM_BUILD_CMD} ${targetPath} ${crateName} ${options}`;
+  const targetDir = cargoTargetDir(cratePath);
+  const cmd = `${WASM_BUILD_CMD} ${targetDir} ${crateName} ${options} --final oasis`;
   await utils.exec(cmd);
+
+  // Now move out both the compiled wasm and the ABI to live within the crate.
+  // This isn't strictly necessary but it's helpful for usability., because it
+  // allows us to assert that only 1 .wasm file exists (see readBytecode function).
+  // As a result, we can remind the user to run the clean command if needed, say,
+  // if the user changed the contract's name.
+  let fromPath = path.join(cargoTargetDir(cratePath), 'oasis.wasm');
+  let toPath = path.join(await wasmOutDir(cratePath), 'oasis.wasm');
+  let mvCmd = `mv ${fromPath} ${toPath}`;
+
+  await fs.mkdirIfNeeded(await wasmOutDir(cratePath));
+  await utils.exec(mvCmd);
+
+  // Now move out the generated json directory to live in the crate's wasm output.
+  let jsonPath = targetDir;
+  if (process.env.CARGO_TARGET_DIR) {
+	// Building with CARGO_TARGET_DIR set makes an extra target directory.
+	jsonPath = path.join(jsonPath, 'target/json');
+  } else {
+	jsonPath = path.join(jsonPath, 'json');
+  }
+
+  let mvJsonCmd = `mv ${jsonPath} ${await wasmOutDir(cratePath)}`;
+  await utils.exec(mvJsonCmd);
+}
+
+/**
+ * @returns the directory to hold compiled wasm and its abi.
+ */
+async function wasmOutDir(cratePath) {
+  const cargoToml = await cargoCrateToml(cratePath);
+  const crateName = cargoToml.name;
+  return path.join(cargoTargetDir(cratePath), crateName);
 }
 
 async function readBytecode(cratePath) {
-  const targetDir =  path.join(cratePath, CARGO_TARGET_DIR);
-  const files = await fs.readDir(targetDir);
+  const parentDir = await wasmOutDir(cratePath);
+  const files = await fs.readDir(parentDir);
   const wasmFiles = files.filter((name) => path.extname(name) === '.wasm');
   if (wasmFiles.length > 1) {
     throw 'Found more than one .wasm file. Execute `oasis-compile clean` and try again.'
   } else if (wasmFiles == 0) {
     throw 'Error: did not find a .wasm output.'
   }
-  const wasmPath = path.join(targetDir, wasmFiles[0]);
+  const wasmPath = path.join(parentDir, wasmFiles[0]);
   const hex = await fs.readBytesAsHex(wasmPath);
   return hex;
 }
 
 async function readAbi(cratePath) {
-  const jsonDir =  path.join(cratePath, CARGO_TARGET_DIR, 'json');
+  const jsonDir =  path.join(await wasmOutDir(cratePath), 'json');
   const files = await fs.readDir(jsonDir);
   let abiName = null;
   let abi = null;
@@ -191,6 +229,9 @@ function assertCrateNameIsValid(crateNameStr) {
  * @returns {String} the path to that crates cargo target directory.
  */
 function cargoTargetDir(cratePath) {
+  if (process.env.CARGO_TARGET_DIR) {
+	return process.env.CARGO_TARGET_DIR;
+  }
   return path.join(cratePath, CARGO_TARGET_DIR);
 }
 
@@ -198,6 +239,7 @@ module.exports = {
   cargoTargetDir,
   compile,
   findCrates,
+  wasmOutDir,
   private: {
     assertCrateNameIsValid,
     cargoCrateTomlStr,

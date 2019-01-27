@@ -75,9 +75,14 @@ async function cleanCrates() {
       await fs.rmFile(cargoLock);
     }
     const targetDir = rust.cargoTargetDir(cratePaths[k]);
-    if (node_fs.existsSync(targetDir)) {
+    if (targetDir !== process.env.CARGO_TARGET_DIR
+		&& node_fs.existsSync(targetDir)) {
       await fs.rmDir(targetDir);
     }
+	let wasmOutDir = await rust.wasmOutDir(cratePaths[k])
+	if (node_fs.existsSync(wasmOutDir)) {
+	  await fs.rmDir(wasmOutDir);
+	}
   }
 }
 

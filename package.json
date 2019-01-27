@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/oasislabs/oasis-compile#readme",
   "dependencies": {
+    "@babel/runtime": "^7.3.1",
     "chalk": "^2.4.1",
     "find-up": "^3.0.0",
     "rimraf": "^2.6.2",

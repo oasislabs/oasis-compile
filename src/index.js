@@ -44,6 +44,11 @@ const utils = require('./utils');
  * For examples, see https://github.com/oasislabs/oasis-box.
  */
 async function main() {
+  // Convenience because truffle test forces us to compile every time. Can remove once
+  // the following is addressed: https://github.com/trufflesuite/truffle/issues/469
+  if (process.env.SKIP_OASIS_COMPILE) {
+    return;
+  }
   if (process.argv[2] == 'clean') {
     await clean();
   } else {

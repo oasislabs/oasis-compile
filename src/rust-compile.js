@@ -11,7 +11,7 @@ const web3c = new Web3c();
  * Command to compile rust source to wasm. Assumes the current directory is the top
  * level directory of the crate to build.
  */
-const CARGO_BUILD_CMD = 'cargo build --target-dir ./target --release --target wasm32-unknown-unknown';
+const CARGO_BUILD_CMD = 'xargo build --target-dir ./target --release --target wasm32-unknown-unknown';
 /**
  * Command to prepare wasm for execution in the Oasis runtime.
  */
@@ -85,7 +85,9 @@ function contractName(abiFilename) {
  * Compiles the crate to wasm.
  */
 async function cargoBuild() {
-  await utils.exec(CARGO_BUILD_CMD);
+  await utils.exec(CARGO_BUILD_CMD, {
+    env: { RUSTFLAGS: '-Z force-unstable-if-unmarked' },
+  });
 }
 
 /**

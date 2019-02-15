@@ -33,7 +33,8 @@
     "toml": "^2.3.3",
     "truffle-compile": "^3.0.13",
     "truffle-external-compile": "^1.0.0-beta.0",
-    "truffle-resolver": "^4.0.4"
+    "truffle-resolver": "^4.0.4",
+    "web3c": "git+https://github.com/oasislabs/web3c.js.git"
   },
   "devDependencies": {
     "mocha": "^5.2.0",

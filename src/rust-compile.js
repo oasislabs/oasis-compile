@@ -4,6 +4,8 @@ const path = require('path');
 const truffleCompile = require('truffle-external-compile');
 const fs = require('./promise-fs');
 const utils = require('./utils');
+const Web3c = require('web3c');
+const web3c = new Web3c();
 
 /**
  * Command to compile rust source to wasm. Assumes the current directory is the top
@@ -56,7 +58,7 @@ async function buildContract(cratePath) {
   let bytecode = await readBytecode(cratePath);
 
   if (utils.isConfidential(crateName)) {
-    bytecode = utils.CONFIDENTIAL_PREFIX + bytecode.substr(2);
+    bytecode = web3c.oasis.utils.DeployHeader.deployCode({confidential: true}, bytecode);
   }
   const [abiFilename, abi] = await readAbi(cratePath);
 

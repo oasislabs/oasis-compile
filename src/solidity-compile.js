@@ -2,6 +2,8 @@ const truffleCompile = require('truffle-compile');
 const Resolver = require('truffle-resolver');
 const fs = require('./promise-fs');
 const utils = require('./utils');
+const Web3c = require('web3c');
+const web3c = new Web3c();
 
 async function compile() {
   truffleCompile.all(await compileConfig(), (err, contracts) => {
@@ -43,10 +45,8 @@ async function compileConfig() {
  *          compile.
  */
 function confidentialCompile(contract) {
-
-  contract.bytecode = utils.CONFIDENTIAL_PREFIX + contract.bytecode.substr(2);
-  contract.deployedBytecode = utils.CONFIDENTIAL_PREFIX + contract.deployedBytecode.substr(2);
-
+  contract.bytecode = web3c.oasis.utils.DeployHeader.deployCode({confidential: true}, contract.bytecode);
+  contract.deployedBytecode = web3c.oasis.utils.DeployHeader.deployCode({confidential: true}, contract.deployedBytecode);
   return contract;
 }
 

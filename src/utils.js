@@ -2,10 +2,6 @@ const childProcess = require('child_process');
 const path = require('path');
 
 /**
- * Bytecode prefix for confidential contracts.
- */
-const CONFIDENTIAL_PREFIX = '0x00656e63';
-/**
  * Directory holding all rust crates representing wasm contracts, relative to
  * the truffle project directory.
  */
@@ -72,7 +68,6 @@ module.exports = {
   exec,
   logCompileStart,
   isConfidential,
-  CONFIDENTIAL_PREFIX,
   CONTRACTS_DIR,
   LOCK_EMOJI,
   OASIS_BUILD_DIR,

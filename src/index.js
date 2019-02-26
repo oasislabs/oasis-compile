@@ -24,8 +24,8 @@ const utils = require('./utils');
  * directory, relative to the root of your truffle project. For Rust, this
  * includes your contract crate.
  *
- * To compile your contracts with confidentiality, prepending b'\0enc' to a
- * contract's bytecode, name either your solidity contract or rust crate
+ * To compile your contracts with confidentiality, prepending the Oasis deploy header
+ * to a contract's bytecode, name either your solidity contract or rust crate
  * directory of the form confidential_* or confidential-*. For example,
  * confidential_MyContract.sol or confidential-my-rust-contract.
  *

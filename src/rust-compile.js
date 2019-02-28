@@ -86,7 +86,10 @@ function contractName(abiFilename) {
  */
 async function cargoBuild() {
   await utils.exec(CARGO_BUILD_CMD, {
-    env: { RUSTFLAGS: '-Z force-unstable-if-unmarked' },
+    env: Object.assign({
+      // allows loading bonus crates from sysroot
+      RUSTFLAGS: '-Z force-unstable-if-unmarked'
+    }, process.env),
   });
 }
 

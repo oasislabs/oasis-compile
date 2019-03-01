@@ -59,3 +59,6 @@ typings/
 
 # next.js build output
 .next
+
+# ephemeral testing resources
+test/integration/oasis-box/tmp/

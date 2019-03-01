@@ -15,7 +15,7 @@ const node_fs = require('fs');
 /**
  * Command to download the truffle project that we'll compile.
  */
-const CLONE_OASIS_BOX = 'git clone  https://github.com/oasislabs/oasis-box.git';
+const CLONE_OASIS_BOX = 'git clone  https://github.com/oasislabs/oasis-box.git --branch test-xargos';
 /**
  * Resultant directory after cloning the box.
  */

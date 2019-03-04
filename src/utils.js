@@ -28,9 +28,9 @@ const LOCK_EMOJI = '🔒';
 /**
  * Executes the given shell command.
  */
-async function exec(cmdStr) {
+async function exec(cmdStr, opts={}) {
   let promise = new Promise(function(resolve, reject) {
-    childProcess.exec(cmdStr, (err, stdout, stderr) => {
+    childProcess.exec(cmdStr, opts, (err, stdout, stderr) => {
       if (err) {
         reject(stderr);
       }

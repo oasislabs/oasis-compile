@@ -37,7 +37,7 @@
     "web3c": "git+https://github.com/oasislabs/web3c.js.git"
   },
   "devDependencies": {
-    "mocha": "^5.2.0",
+    "mocha": "^10.2.0",
     "eslint": "^5.6.1"
   },
   "eslintConfig": {
